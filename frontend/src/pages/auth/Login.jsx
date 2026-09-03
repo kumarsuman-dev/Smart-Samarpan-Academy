@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import "./auth.css"; // Assuming you still have this for general auth page styling
 import { Link, useNavigate } from "react-router-dom";
 import { UserData } from "../../context/UserContext";
@@ -21,8 +21,8 @@ const Login = () => {
     await loginUser(email, password, navigate, fetchMyCourse);
   };
 
-  // NEW: Google login success handler
-  const googleSuccessHandler = async (credentialResponse) => {
+  // Memoized Google login success handler
+  const googleSuccessHandler = useCallback(async (credentialResponse) => {
     try {
       // Send the Google credential to your backend for verification
       const { data } = await axios.post(`${server}/api/user/google-login`, {
@@ -42,12 +42,12 @@ const Login = () => {
       console.error("Google login error:", error);
       toast.error(error.response?.data?.message || "An error occurred during Google login.");
     }
-  };
+  }, [navigate, fetchUser, fetchMyCourse]);
 
-  // NEW: Google login error handler
-  const googleErrorHandler = () => {
+  // Memoized Google login error handler
+  const googleErrorHandler = useCallback(() => {
     toast.error("Google login failed. Please try again.");
-  };
+  }, []);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#f8f7f2] p-4 py-12">

@@ -22,11 +22,32 @@ const CourseDescription = ({ user }) => {
     fetchCourse(params.id);
   }, [params.id]);
 
+  const loadRazorpayScript = () => {
+    return new Promise((resolve) => {
+      if (window.Razorpay) {
+        resolve(true);
+        return;
+      }
+      const script = document.createElement("script");
+      script.src = "https://checkout.razorpay.com/v1/checkout.js";
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.body.appendChild(script);
+    });
+  };
+
   const checkoutHandler = async () => {
     const token = localStorage.getItem("token");
     setLoading(true);
 
     try {
+      const isLoaded = await loadRazorpayScript();
+      if (!isLoaded) {
+        toast.error("Razorpay SDK failed to load. Please check your connection.");
+        setLoading(false);
+        return;
+      }
+
       const { data: { order } } = await axios.post(
         `${server}/api/course/checkout/${params.id}`,
         {},
