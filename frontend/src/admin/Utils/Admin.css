@@ -21,19 +21,87 @@
   border-right: 1px solid #e5e1d8;
   display: flex;
   flex-direction: column;
-  padding: 28px 18px;
+  padding: 24px 16px;
   position: relative;
-  z-index: 20;
+  z-index: 40;
   box-shadow: 2px 0 8px rgba(23, 37, 84, 0.03);
+  transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1), padding 0.3s ease;
+  flex-shrink: 0;
+}
+
+/* Collapsed (Minimized) state */
+.adm-sidebar.collapsed {
+  width: 76px;
+  padding: 24px 10px;
+}
+
+.adm-sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28px;
+  min-height: 38px;
+  padding: 0 4px;
+  position: relative;
+}
+
+.adm-sidebar.collapsed .adm-sidebar-header {
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
 }
 
 .adm-sidebar-brand {
-  font-size: 1.15rem;
+  font-size: 1.18rem;
   font-weight: 900;
   color: #172554;
-  margin-bottom: 32px;
-  padding-left: 8px;
   letter-spacing: -0.02em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.adm-brand-short {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  background: #172554;
+  color: #ffffff;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 900;
+  box-shadow: 0 2px 8px rgba(23, 37, 84, 0.2);
+}
+
+.adm-collapse-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: #f4f2eb;
+  border: 1px solid #e5e1d8;
+  border-radius: 8px;
+  color: #172554;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.adm-collapse-btn:hover {
+  background: #172554;
+  color: #ffffff;
+  border-color: #172554;
+  transform: scale(1.05);
+}
+
+.adm-mobile-close-btn {
+  display: none;
 }
 
 .adm-nav-list {
@@ -57,6 +125,13 @@
   color: #4b5563;
   transition: all 0.2s ease;
   border: 1px solid transparent;
+  white-space: nowrap;
+}
+
+.adm-sidebar.collapsed .adm-nav-link {
+  justify-content: center;
+  padding: 12px;
+  gap: 0;
 }
 
 .adm-nav-link:hover {
@@ -71,8 +146,9 @@
 }
 
 .adm-nav-icon {
-  font-size: 1.1rem;
+  font-size: 1.15rem;
   color: inherit;
+  flex-shrink: 0;
 }
 
 .adm-nav-link:hover .adm-nav-icon {
@@ -87,6 +163,11 @@
   margin-top: auto;
   border-top: 1px solid #e5e1d8;
   padding-top: 18px;
+}
+
+.adm-sidebar.collapsed .adm-sidebar-footer .adm-nav-link {
+  justify-content: center;
+  padding: 12px;
 }
 
 .adm-nav-link.logout {
@@ -548,4 +629,98 @@ select.adm-input option {
   background: #ffffff;
   color: #1f2937;
 }
+
+/* ── Mobile Topbar Toggle ── */
+.adm-mobile-topbar {
+  display: none;
+  margin-bottom: 24px;
+}
+
+.adm-mobile-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #ffffff;
+  border: 1px solid #e5e1d8;
+  padding: 9px 16px;
+  border-radius: 8px;
+  color: #172554;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(23, 37, 84, 0.05);
+  transition: all 0.2s ease;
+}
+
+.adm-mobile-toggle-btn:hover {
+  background: #f4f2eb;
+  border-color: #0f766e;
+  color: #0f766e;
+}
+
+/* Mobile Backdrop */
+.adm-mobile-backdrop {
+  display: none;
+}
+
+/* ── Mobile Responsive Overrides ── */
+@media (max-width: 768px) {
+  .adm-mobile-topbar {
+    display: block;
+  }
+
+  .adm-mobile-backdrop {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(15, 23, 42, 0.45);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 998;
+  }
+
+  .adm-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    height: 100vh;
+    width: 270px !important;
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 999;
+    box-shadow: 4px 0 24px rgba(23, 37, 84, 0.18);
+  }
+
+  .adm-sidebar.mobile-open {
+    transform: translateX(0);
+  }
+
+  .adm-collapse-btn {
+    display: none !important;
+  }
+
+  .adm-mobile-close-btn {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: #f4f2eb;
+    border: 1px solid #e5e1d8;
+    border-radius: 8px;
+    color: #172554;
+    cursor: pointer;
+    font-size: 18px;
+  }
+
+  .adm-content {
+    padding: 20px 16px;
+    width: 100%;
+  }
+}
+
 
