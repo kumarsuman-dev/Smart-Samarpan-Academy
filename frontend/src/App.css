@@ -1,6 +1,10 @@
     /* frontend/src/App.css */
     @import "tailwindcss";
 
+    html {
+      scroll-behavior: smooth;
+    }
+
     /* Your existing custom CSS and keyframes can go below this */
     body {
       margin: 0;

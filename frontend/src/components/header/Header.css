@@ -3,26 +3,43 @@
    ================================================================ */
 @import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap");
 
+/* Wrapper keeps the page document flow completely steady during shrink/hide */
+.hdr-wrapper {
+  height: 77px;
+  width: 100%;
+  position: relative;
+}
+
+@media (max-width: 768px) {
+  .hdr-wrapper {
+    height: 68px;
+  }
+}
+
 .hdr-main {
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
   z-index: 100;
   background: rgba(248, 247, 242, 0.94);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   border-bottom: 1px solid #e5e1d8;
   box-shadow: 0 2px 12px rgba(23, 37, 84, 0.04);
   font-family: "Plus Jakarta Sans", "Inter", sans-serif;
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-              background 0.3s ease,
-              box-shadow 0.3s ease;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              background-color 0.35s ease,
+              box-shadow 0.35s ease,
+              border-color 0.35s ease;
   will-change: transform;
 }
 
 /* Navbar slowly becomes smaller on scroll */
 .hdr-main.hdr-scrolled {
   background: rgba(248, 247, 242, 0.98);
-  box-shadow: 0 4px 18px rgba(23, 37, 84, 0.08);
+  box-shadow: 0 4px 20px rgba(23, 37, 84, 0.08);
 }
 
 .hdr-main.hdr-scrolled .hdr-container {
@@ -51,7 +68,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  transition: padding 0.3s ease;
+  transition: padding 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* Logo */
@@ -261,6 +278,29 @@
   color: #ffffff;
 }
 
+@media (max-width: 767px) {
+  .hdr-container {
+    padding: 10px 16px;
+  }
+  .hdr-logo-img {
+    height: 42px;
+    width: 42px;
+  }
+  .hdr-brand-name {
+    font-size: 1.15rem;
+  }
+  .hdr-main.hdr-scrolled .hdr-container {
+    padding: 6px 16px;
+  }
+  .hdr-main.hdr-scrolled .hdr-logo-img {
+    height: 34px;
+    width: 34px;
+  }
+  .hdr-main.hdr-scrolled .hdr-brand-name {
+    font-size: 1.05rem;
+  }
+}
+
 @media (min-width: 768px) {
   .hdr-mobile-btn {
     display: none;
@@ -269,4 +309,5 @@
     display: none;
   }
 }
+
 

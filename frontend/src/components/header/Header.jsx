@@ -21,26 +21,35 @@ const Header = ({ isAuth }) => {
   // Handle scroll: slowly shrink navbar then close/hide on scroll down, restore on scroll up
   useEffect(() => {
     let lastScrollY = window.scrollY;
+    let ticking = false;
 
     const handleScroll = () => {
-      const currentScrollY = window.scrollY;
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const currentScrollY = window.scrollY;
 
-      // If mobile menu is open, close it as soon as user starts scrolling
-      if (isMobileMenuOpen) {
-        setIsMobileMenuOpen(false);
+          // If mobile menu is open, close it as soon as user starts scrolling
+          if (isMobileMenuOpen && Math.abs(currentScrollY - lastScrollY) > 10) {
+            setIsMobileMenuOpen(false);
+          }
+
+          // Slowly small (compact mode) after scrolling past 30px
+          setIsScrolled(currentScrollY > 30);
+
+          // Close/hide when scrolling down past 160px with deliberate scroll
+          // Show immediately when scrolling up or near top (<= 100px)
+          const delta = currentScrollY - lastScrollY;
+          if (currentScrollY > 160 && delta > 12) {
+            setIsHidden(true); // scrolling down -> hide
+          } else if (delta < -8 || currentScrollY <= 100) {
+            setIsHidden(false); // scrolling up or at top -> show
+          }
+
+          lastScrollY = currentScrollY;
+          ticking = false;
+        });
+        ticking = true;
       }
-
-      // Slowly small (compact mode) after scrolling past 15px
-      setIsScrolled(currentScrollY > 15);
-
-      // Close/hide when scrolling down past 70px; show when scrolling up or near top
-      if (currentScrollY > 70 && currentScrollY > lastScrollY + 6) {
-        setIsHidden(true); // scrolling down -> hide
-      } else if (currentScrollY < lastScrollY - 6 || currentScrollY <= 70) {
-        setIsHidden(false); // scrolling up or at top -> show
-      }
-
-      lastScrollY = currentScrollY;
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -52,13 +61,14 @@ const Header = ({ isAuth }) => {
   };
 
   return (
-    <header className={`hdr-main ${isScrolled ? "hdr-scrolled" : ""} ${isHidden && !isMobileMenuOpen ? "hdr-hidden" : ""}`}>
-      <div className="hdr-container">
-        {/* Logo and Brand Name */}
-        <Link to="/" className="hdr-logo-link" onClick={() => setIsMobileMenuOpen(false)}>
-          <img src={logo} alt="Samarpan Math Academy Logo" className="hdr-logo-img" />
-          <span className="hdr-brand-name">Samarpan Math Academy</span>
-        </Link>
+    <div className="hdr-wrapper">
+      <header className={`hdr-main ${isScrolled ? "hdr-scrolled" : ""} ${isHidden && !isMobileMenuOpen ? "hdr-hidden" : ""}`}>
+        <div className="hdr-container">
+          {/* Logo and Brand Name */}
+          <Link to="/" className="hdr-logo-link" onClick={() => setIsMobileMenuOpen(false)}>
+            <img src={logo} alt="Samarpan Math Academy Logo" className="hdr-logo-img" />
+            <span className="hdr-brand-name">Samarpan Math Academy</span>
+          </Link>
 
         {/* Navigation Links */}
         <nav className="hdr-nav">
@@ -149,6 +159,7 @@ const Header = ({ isAuth }) => {
         </nav>
       </div>
     </header>
+  </div>
   );
 };
 
