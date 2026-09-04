@@ -58,11 +58,20 @@ const CourseDescription = ({ user }) => {
 
       const options = {
         key: import.meta.env.VITE_RAZORPAY_KEY || "rzp_test_hu4uSc3Jfsnnnj",
-        amount: order.id,
+        amount: order.amount,
         currency: "INR",
         name: "Samarpan",
         description: "Learn with us",
         order_id: order.id,
+        prefill: {
+          name: user?.name || "",
+          email: user?.email || "",
+        },
+        modal: {
+          ondismiss: function () {
+            setLoading(false);
+          },
+        },
         handler: async function (response) {
           const { razorpay_order_id, razorpay_payment_id, razorpay_signature } =
             response;
@@ -83,7 +92,7 @@ const CourseDescription = ({ user }) => {
             setLoading(false);
             navigate(`/payment-success/${razorpay_payment_id}`);
           } catch (error) {
-            toast.error(error.response.data.message);
+            toast.error(error.response?.data?.message || "Payment verification failed");
             setLoading(false);
           }
         },
